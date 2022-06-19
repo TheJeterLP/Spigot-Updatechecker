@@ -3,11 +3,12 @@ package de.thejeterlp.updatechecker;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class UpdateChecker {
 
@@ -25,14 +26,7 @@ public class UpdateChecker {
         this.plugin = plugin;
         this.id = id;
         this.USER_AGENT = plugin.getName() + " UpdateChecker";
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-            @Override
-            public void run() {
-                if (checkResource(API_RESOURCE + id)) {
-                    checkUpdate();
-                }
-            }
-        });
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, this::checkUpdate);
     }
 
     public enum Result {
@@ -62,33 +56,6 @@ public class UpdateChecker {
     }
 
     /**
-     * Check if id of resource is valid
-     *
-     * @param link link of the resource
-     * @return true if id of resource is valid
-     */
-    private boolean checkResource(String link) {
-        try {
-            URL url = new URL(link);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.addRequestProperty("User-Agent", USER_AGENT);
-
-            int code = connection.getResponseCode();
-
-            if (code != 200) {
-                connection.disconnect();
-                result = Result.BAD_ID;
-                return false;
-            }
-            connection.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return true;
-    }
-
-    /**
      * Checks if there is any update available.
      */
     private void checkUpdate() {
@@ -112,12 +79,13 @@ public class UpdateChecker {
 
             if (shouldUpdate(version, plugin.getDescription().getVersion())) {
                 result = Result.UPDATE_FOUND;
-                plugin.getLogger().info("Update found!");
+                plugin.getLogger().info("Update found! Please consider installing the latest version from SpigotMC!");
             } else {
                 plugin.getLogger().info("No update found.");
                 result = Result.NO_UPDATE;
             }
         } catch (Exception e) {
+            result = Result.FAILED;
             e.printStackTrace();
         }
     }
@@ -130,12 +98,13 @@ public class UpdateChecker {
      */
     private boolean shouldUpdate(String newVersion, String oldVersion) {
         try {
-            float oldV = Float.valueOf(oldVersion.replaceAll("\\.", "").replace("v", "."));
-            float newV = Float.valueOf(newVersion.replaceAll("\\.", "").replace("v", "."));
+            float oldV = Float.parseFloat(oldVersion.replaceAll("\\.", "").replace("v", "."));
+            float newV = Float.parseFloat(newVersion.replaceAll("\\.", "").replace("v", "."));
             return oldV < newV;
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
             return !newVersion.equalsIgnoreCase(oldVersion);
         }
     }
+
 }
