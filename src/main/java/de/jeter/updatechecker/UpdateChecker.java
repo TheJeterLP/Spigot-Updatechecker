@@ -98,8 +98,8 @@ public class UpdateChecker {
      */
     private boolean shouldUpdate(String newVersion, String oldVersion) {
         try {
-            float oldV = Float.parseFloat(oldVersion.replaceAll("\\.", "").replace("v", "."));
-            float newV = Float.parseFloat(newVersion.replaceAll("\\.", "").replace("v", "."));
+            float oldV = Float.parseFloat(oldVersion.replaceAll("\\.", "").replaceAll("v", ".").replaceAll("-SNAPSHOT", ""));
+            float newV = Float.parseFloat(newVersion.replaceAll("\\.", "").replaceAll("v", ".").replaceAll("-SNAPSHOT", ""));
             return oldV < newV;
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
