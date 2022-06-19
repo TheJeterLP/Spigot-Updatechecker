@@ -1,4 +1,4 @@
-package de.thejeterlp.updatechecker;
+package de.jeter.updatechecker;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
