@@ -35,7 +35,7 @@ jobs:
       - name: upload jar
         uses: actions/upload-artifact@v1
         with:
-          name: ChatEx ${{ github.event.head_commit.message }}
+          name: Spigot-Updatechecker ${{ github.event.head_commit.message }}
           path: staging
       - name: Create Release
         id: create_release
@@ -44,7 +44,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.event.head_commit.message }}
-          release_name: ChatEx ${{ github.event.head_commit.message }}
+          release_name: Spigot-Updatechecker ${{ github.event.head_commit.message }}
           body: ${{ github.event.head_commit.message }}
           draft: false
           prerelease: false
@@ -82,7 +82,7 @@ jobs:
       - name: upload jar
         uses: actions/upload-artifact@v1
         with:
-          name: ChatEx ${{ github.event.head_commit.message }}
+          name: Spigot-Updatechecker ${{ github.event.head_commit.message }}
           path: staging
       - name: Create Release
         id: create_release
@@ -91,7 +91,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.event.head_commit.message }}
-          release_name: ChatEx ${{ github.event.head_commit.message }}
+          release_name: Spigot-Updatechecker ${{ github.event.head_commit.message }}
           body: ${{ github.event.head_commit.message }}
           draft: false
           prerelease: true
