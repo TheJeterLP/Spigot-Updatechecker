@@ -19,11 +19,13 @@ public class SpigotUpdateChecker extends UpdateChecker {
     private static final String VERSIONS = "/versions/latest";
     private static final String API_RESOURCE = "https://api.spiget.org/v2/resources/";
     private final String USER_AGENT;
+    private final String url;
 
     public SpigotUpdateChecker(JavaPlugin plugin, int id) {
         this.plugin = plugin;
         this.id = id;
         this.USER_AGENT = plugin.getName() + " UpdateChecker";
+        this.url = "https://www.spigotmc.org/resources/" + id + "/updates";
         super.init(plugin);
     }
 
@@ -39,7 +41,7 @@ public class SpigotUpdateChecker extends UpdateChecker {
 
     @Override
     public String getUpdateMessage() {
-        return "Update found! Please consider installing the latest version from SpigotMC!";
+        return "Update found! Please consider installing the latest version from " + url;
     }
 
     @Override
