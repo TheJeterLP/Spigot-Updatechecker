@@ -1,11 +1,20 @@
 package de.jeter.updatechecker;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class GitHubUpdateChecker extends UpdateChecker {
 
     private final JavaPlugin plugin;
-    private final String repository;
+    private URL url;
     private Result result = Result.NO_UPDATE;
     private String version;
     private final String USER_AGENT;
@@ -18,8 +27,14 @@ public class GitHubUpdateChecker extends UpdateChecker {
      */
     public GitHubUpdateChecker(JavaPlugin plugin, String repoOwner, String repository) {
         this.plugin = plugin;
-        this.repository = repoOwner + "/" + repository;
+        try {
+            this.url = new URL("https://github.com/" + repoOwner + "/" + repository + "/releases/latest");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            this.url = null;
+        }
         this.USER_AGENT = plugin.getName() + " UpdateChecker";
+        super.init(plugin);
     }
 
     @Override
@@ -33,7 +48,23 @@ public class GitHubUpdateChecker extends UpdateChecker {
     }
 
     @Override
-    protected void checkForUpdate() {
+    public String getUpdateMessage() {
+        return null;
+    }
 
+    @Override
+    protected void checkForUpdate() {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.addRequestProperty("User-Agent", USER_AGENT);
+            connection.addRequestProperty("Accept", "application/vnd.github+json");
+            InputStream inputStream = connection.getInputStream();
+            InputStreamReader reader = new InputStreamReader(inputStream);
+
+            JsonElement element = JsonParser.parseReader(reader);
+            JsonObject object = element.getAsJsonObject();
+            System.out.println(object.toString());
+        } catch (Exception e) {
+        }
     }
 }

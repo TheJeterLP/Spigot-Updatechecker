@@ -20,6 +20,12 @@ public abstract class UpdateChecker {
     public abstract String getLatestRemoteVersion();
 
     /**
+     * Gets the message to print out when a new update is available
+     * @return message
+     */
+    public abstract String getUpdateMessage();
+
+    /**
      * Runs the actual checker itself.
      */
     protected abstract void checkForUpdate();

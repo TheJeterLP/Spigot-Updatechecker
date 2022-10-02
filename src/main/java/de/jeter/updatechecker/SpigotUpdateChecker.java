@@ -21,10 +21,10 @@ public class SpigotUpdateChecker extends UpdateChecker {
     private final String USER_AGENT;
 
     public SpigotUpdateChecker(JavaPlugin plugin, int id) {
-        super.init(plugin);
         this.plugin = plugin;
         this.id = id;
         this.USER_AGENT = plugin.getName() + " UpdateChecker";
+        super.init(plugin);
     }
 
     @Override
@@ -35,6 +35,11 @@ public class SpigotUpdateChecker extends UpdateChecker {
     @Override
     public String getLatestRemoteVersion() {
         return version;
+    }
+
+    @Override
+    public String getUpdateMessage() {
+        return "Update found! Please consider installing the latest version from SpigotMC!";
     }
 
     @Override
@@ -50,7 +55,6 @@ public class SpigotUpdateChecker extends UpdateChecker {
             InputStreamReader reader = new InputStreamReader(inputStream);
 
             JsonElement element = JsonParser.parseReader(reader);
-            plugin.getLogger().info(element.toString());
             JsonObject object = element.getAsJsonObject();
             element = object.get("name");
             version = element.toString().replaceAll("\"", "");
@@ -60,7 +64,7 @@ public class SpigotUpdateChecker extends UpdateChecker {
 
             if (shouldUpdate(version, plugin.getDescription().getVersion())) {
                 result = Result.UPDATE_FOUND;
-                plugin.getLogger().info("Update found! Please consider installing the latest version from SpigotMC!");
+                plugin.getLogger().info(getUpdateMessage());
             } else {
                 plugin.getLogger().info("No update found.");
                 result = Result.NO_UPDATE;
