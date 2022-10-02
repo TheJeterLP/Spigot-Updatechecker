@@ -21,6 +21,7 @@ public abstract class UpdateChecker {
 
     /**
      * Gets the message to print out when a new update is available
+     *
      * @return message
      */
     public abstract String getUpdateMessage();
@@ -49,6 +50,7 @@ public abstract class UpdateChecker {
 
     /**
      * Initializes the updatechecker
+     *
      * @param plugin
      */
     protected void init(JavaPlugin plugin) {

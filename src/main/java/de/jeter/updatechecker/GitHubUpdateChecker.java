@@ -8,32 +8,25 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class GitHubUpdateChecker extends UpdateChecker {
 
     private final JavaPlugin plugin;
-    private URL url;
+    private String url;
     private Result result = Result.NO_UPDATE;
     private String version;
-    private final String USER_AGENT;
 
     /**
      * Initiates and runs a new UpdateChecker gaining GitHub releases
-     * @param plugin the plugin
-     * @param repoOwner the owner of the repository. For example "TheJeterLP"
+     *
+     * @param plugin     the plugin
+     * @param repoOwner  the owner of the repository. For example "TheJeterLP"
      * @param repository the repository. For example "Spigot-Updatechecker"
      */
     public GitHubUpdateChecker(JavaPlugin plugin, String repoOwner, String repository) {
         this.plugin = plugin;
-        try {
-            this.url = new URL("https://github.com/" + repoOwner + "/" + repository + "/releases/latest");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            this.url = null;
-        }
-        this.USER_AGENT = plugin.getName() + " UpdateChecker";
+        this.url = "https://github.com/" + repoOwner + "/" + repository + "/releases/latest";
         super.init(plugin);
     }
 
@@ -49,22 +42,36 @@ public class GitHubUpdateChecker extends UpdateChecker {
 
     @Override
     public String getUpdateMessage() {
-        return null;
+        return "Update found! Please consider downloading the newest version from " + url;
     }
 
     @Override
     protected void checkForUpdate() {
         try {
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.addRequestProperty("User-Agent", USER_AGENT);
-            connection.addRequestProperty("Accept", "application/vnd.github+json");
+            URL githubURL = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) githubURL.openConnection();
+            connection.addRequestProperty("Content-Type", "application/json");
+            connection.addRequestProperty("Accept", "application/json");
             InputStream inputStream = connection.getInputStream();
             InputStreamReader reader = new InputStreamReader(inputStream);
-
             JsonElement element = JsonParser.parseReader(reader);
             JsonObject object = element.getAsJsonObject();
-            System.out.println(object.toString());
+            element = object.get("tag_name");
+            version = element.toString().replaceAll("\"", "").replaceFirst("v", "");
+
+            plugin.getLogger().info("Version installed is " + plugin.getDescription().getVersion());
+            plugin.getLogger().info("Latest version found online is " + version);
+
+            if (shouldUpdate(version, plugin.getDescription().getVersion())) {
+                result = Result.UPDATE_FOUND;
+                plugin.getLogger().info(getUpdateMessage());
+            } else {
+                plugin.getLogger().info("No update found.");
+                result = Result.NO_UPDATE;
+            }
         } catch (Exception e) {
+            result = Result.FAILED;
+            e.printStackTrace();
         }
     }
 }
