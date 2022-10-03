@@ -54,7 +54,13 @@ public class GitHubUpdateChecker extends UpdateChecker {
             connection.addRequestProperty("Accept", "application/json");
             InputStream inputStream = connection.getInputStream();
             InputStreamReader reader = new InputStreamReader(inputStream);
-            JsonElement element = JsonParser.parseReader(reader);
+            JsonElement element = null;
+
+            try {
+                element = JsonParser.parseReader(reader);
+            } catch (NoSuchMethodError e) {
+                element = new JsonParser().parse(reader);
+            }
             JsonObject object = element.getAsJsonObject();
             element = object.get("tag_name");
             version = element.toString().replaceAll("\"", "").replaceFirst("v", "");
