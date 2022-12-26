@@ -8,18 +8,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class SpigotUpdateChecker extends UpdateChecker {
 
-    private final JavaPlugin plugin;
-    private final int id;
-    private Result result = Result.NO_UPDATE;
-    private String version;
     private static final String VERSIONS = "/versions/latest";
     private static final String API_RESOURCE = "https://api.spiget.org/v2/resources/";
+    private final JavaPlugin plugin;
+    private final int id;
     private final String USER_AGENT;
     private final String url;
+    private Result result = Result.NO_UPDATE;
+    private String version;
 
     public SpigotUpdateChecker(JavaPlugin plugin, int id) {
         this.plugin = plugin;
@@ -42,6 +43,16 @@ public class SpigotUpdateChecker extends UpdateChecker {
     @Override
     public String getUpdateMessage() {
         return "Update found! Please consider installing the latest version from " + url;
+    }
+
+    @Override
+    public URL getDownloadLink() {
+        try {
+            return new URL(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
