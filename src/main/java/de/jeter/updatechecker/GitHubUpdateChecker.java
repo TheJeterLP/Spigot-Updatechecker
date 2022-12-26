@@ -17,7 +17,6 @@ public class GitHubUpdateChecker extends UpdateChecker {
     private String url;
     private Result result = Result.NO_UPDATE;
     private String version;
-    private URL downloadLink;
 
     /**
      * Initiates and runs a new UpdateChecker gaining GitHub releases
@@ -29,7 +28,6 @@ public class GitHubUpdateChecker extends UpdateChecker {
     public GitHubUpdateChecker(JavaPlugin plugin, String repoOwner, String repository) {
         this.plugin = plugin;
         this.url = "https://github.com/" + repoOwner + "/" + repository + "/releases/latest";
-        this.downloadLink = null;
         super.init(plugin);
     }
 
