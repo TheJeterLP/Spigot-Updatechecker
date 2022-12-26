@@ -8,7 +8,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class SpigotUpdateChecker extends UpdateChecker {
@@ -46,13 +45,8 @@ public class SpigotUpdateChecker extends UpdateChecker {
     }
 
     @Override
-    public URL getDownloadLink() {
-        try {
-            return new URL(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public String getDownloadLink() {
+        return url;
     }
 
     @Override
