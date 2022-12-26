@@ -2,6 +2,8 @@ package de.jeter.updatechecker;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.net.URL;
+
 public abstract class UpdateChecker {
 
     /**
@@ -25,6 +27,13 @@ public abstract class UpdateChecker {
      * @return message
      */
     public abstract String getUpdateMessage();
+
+    /**
+     * Gets the URL where the new version can be downloaded
+     *
+     * @return
+     */
+    public abstract URL getDownloadLink();
 
     /**
      * Runs the actual checker itself.
