@@ -2,8 +2,6 @@ package de.jeter.updatechecker;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.net.URL;
-
 public abstract class UpdateChecker {
 
     /**
@@ -33,7 +31,7 @@ public abstract class UpdateChecker {
      *
      * @return
      */
-    public abstract URL getDownloadLink();
+    public abstract String getDownloadLink();
 
     /**
      * Runs the actual checker itself.
